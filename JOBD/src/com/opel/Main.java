@@ -23,7 +23,7 @@ public class Main {
         int i;
         SerialPort[] liste = SerialPort.getCommPorts();
         for (SerialPort port:liste
-             ) {
+                ) {
             System.out.println(port.getDescriptivePortName());
         }
         SerialPort obd = liste[1];
@@ -55,7 +55,7 @@ public class Main {
                 System.out.println((char)b);}*/
 
             while (( i = in.read())!= 62){
-                    //System.out.println((char)i);
+                //System.out.println((char)i);
             }
             out.write(test.getBytes());
             sleep(4000);
@@ -89,4 +89,4 @@ public class Main {
         }
 
     }
-    }
+}
