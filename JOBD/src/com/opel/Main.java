@@ -1,4 +1,6 @@
 package com.opel;
+import Commands.OBDreset;
+import Commands.OBDrpm;
 import com.fazecast.jSerialComm.*;
 
 import java.io.IOException;
@@ -14,15 +16,13 @@ public class Main {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         OutputStream out;
         InputStream in;
-        StringBuilder response = new StringBuilder();
-        String reset = "E0\r\n";
-        String test ="01 0C\r\n";
+
         int i;
         SerialPort[] liste = SerialPort.getCommPorts();
-        for (SerialPort port:liste
+        for (SerialPort port : liste
                 ) {
             System.out.println(port.getDescriptivePortName());
         }
@@ -34,58 +34,18 @@ public class Main {
         obd.setFlowControl(FLOW_CONTROL_XONXOFF_IN_ENABLED);
         obd.setFlowControl(FLOW_CONTROL_XONXOFF_OUT_ENABLED);
         obd.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
-        if (obd.openPort()){
+        if (obd.openPort()) {
             System.out.println("Verbindung Steht");
 
         }
         in = obd.getInputStream();
         out = obd.getOutputStream();
 
-
-        try {
-
-            //System.out.println(obd.writeBytes(reset.getBytes(),(long)reset.getBytes().length));
-            out.write(reset.getBytes());
-            sleep(4000);
-
-            /*byte[] buffer = new byte[obd.bytesAvailable()];
-
-            System.out.println(obd.readBytes(buffer,obd.bytesAvailable()));
-            for (byte b:buffer) {
-                System.out.println((char)b);}*/
-
-            while (( i = in.read())!= 62){
-                //System.out.println((char)i);
-            }
-            out.write(test.getBytes());
-            sleep(4000);
-
-            /*byte[] buffer = new byte[obd.bytesAvailable()];
-
-            System.out.println(obd.readBytes(buffer,obd.bytesAvailable()));
-            for (byte b:buffer) {
-                System.out.println((char)b);}*/
-
-            while (( i = in.read())!= 62){
-
-                response.append((char)i);
-            }
-            String response2 = response.toString().replaceAll("\r","\0");
-            System.out.println(response2);
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-
-            obd.closePort();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        OBDrpm rpmmeter = new OBDrpm();
+        for(int c = 0; c<5000; c++) {
+            rpmmeter.run(in, out);
+            System.out.println(rpmmeter.getResult());
+            Thread.sleep(100);
         }
 
     }
