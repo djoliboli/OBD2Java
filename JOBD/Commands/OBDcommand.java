@@ -1,5 +1,9 @@
 package Commands;
 
+import Exeption.CarUnableToConnectExeption;
+import Exeption.DataInvalidExeption;
+import Exeption.UnableToConnectExeption;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,6 +17,8 @@ public abstract class OBDcommand {
     private long end;
     protected Long waitForResponse = null;
     protected String rawData = null;
+    boolean available = true;
+
 
 
 
@@ -21,12 +27,15 @@ public abstract class OBDcommand {
         this.buffer = new ArrayList<>();
     }
 
-    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException {
+    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException, DataInvalidExeption, CarUnableToConnectExeption {
         synchronized (OBDcommand.class) {
-            start = System.currentTimeMillis();
-            sendCommand(out);
-            readResult(in);
-            end = System.currentTimeMillis();
+            if (available) {
+                start = System.currentTimeMillis();
+                sendCommand(out);
+                readResult(in);
+                end = System.currentTimeMillis();
+            }
+            else return;
         }
     }
 
@@ -38,7 +47,7 @@ public abstract class OBDcommand {
         }
     }
 
-    protected void readResult(InputStream in) throws IOException {
+    protected void readResult(InputStream in) throws DataInvalidExeption, IOException, CarUnableToConnectExeption{
         readRawData(in);
         checkData();
         fillBuffer();
@@ -47,13 +56,13 @@ public abstract class OBDcommand {
 
     protected abstract void calculateResult(); // Was muss mit den Daten noch passieren bevor diese zurück gegeben werden
 
-    private void checkData() throws IOException {
+    private void checkData() throws DataInvalidExeption {
         if(rawData.isEmpty()){
-            throw new IOException("Fehlerhafte antwort");
+            throw new DataInvalidExeption();
         }
     }
 
-    protected void readRawData(InputStream in) throws IOException {
+    protected void readRawData(InputStream in) throws IOException{
         byte b = 0;
         StringBuilder res = new StringBuilder();
 
@@ -79,26 +88,30 @@ public abstract class OBDcommand {
     private static Pattern SEARCHING_PATTERN = Pattern.compile("SEARCHING"); // Searching
     private static Pattern DIGITS_LETTERS_PATTERN = Pattern.compile("([0-9A-F])+"); // alle zugelassenen Zeichen
     private static Pattern UNABLE_TO_CONNECT = Pattern.compile(".*UNABLETOCONNECT"); //falls nicht verbunden
+    private static Pattern NODATA = Pattern.compile(".*NODATA"); //falls nicht verbunden
 
-    protected String replaceAll(Pattern pattern, String input, String replacement) {
-        return pattern.matcher(input).replaceAll(replacement);
-    }
+
 
     protected String removeAll(Pattern pattern, String input) {
         return pattern.matcher(input).replaceAll("");
     }
 
-    protected void fillBuffer() throws IOException {
+    protected void fillBuffer() throws CarUnableToConnectExeption, DataInvalidExeption {
         rawData = removeAll(WHITESPACE_PATTERN, rawData); //removes all [ \t\n\x0B\f\r]
         rawData = removeAll(BUSINIT_PATTERN, rawData);
 
         if(UNABLE_TO_CONNECT.matcher(rawData).matches()){
-            throw new IOException("Fahrzeug  ist nicht verbunden");
+            throw new CarUnableToConnectExeption();
+        }
+        else if(NODATA.matcher(rawData).matches()){
+            available = false;
+            return;
+
         }
 
-        if (!DIGITS_LETTERS_PATTERN.matcher(rawData).matches()) {
-            System.out.println(rawData);
-            throw new IOException("Ungueltige Zeichen");
+        else if (!DIGITS_LETTERS_PATTERN.matcher(rawData).matches()) {
+            System.out.println("ERROR !!!: "+rawData);
+            throw new DataInvalidExeption();
         }
 
         // read string each two chars
@@ -113,8 +126,15 @@ public abstract class OBDcommand {
     }
 
     public String getResult() {
-        return rawData;
+        if (available){
+            return rawData;
+        }
+        else{
+            return "NODATA";
+        }
     }
+
+
 
 
 }

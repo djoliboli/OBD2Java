@@ -8,7 +8,7 @@ public class OBDrpm extends OBDcommand {
 
     @Override
     protected void calculateResult() {
-        rpm = (buffer.get(4) * 256 + buffer.get(3)) / 4;
+        rpm = (buffer.get(4) * 256 + buffer.get(5)) / 4;
 
     }
 
