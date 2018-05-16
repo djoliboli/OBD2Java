@@ -1,45 +1,33 @@
 package com.opel;
 import Commands.*;
+import Config.config;
+import SerialCommunication.InputstreamGen;
+import SerialCommunication.OutputstreamGen;
+import SerialCommunication.SerialPortSelector;
 import com.fazecast.jSerialComm.*;
+import org.eclipse.paho.client.mqttv3.*;
 
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 
-import static com.fazecast.jSerialComm.SerialPort.FLOW_CONTROL_XONXOFF_IN_ENABLED;
-import static com.fazecast.jSerialComm.SerialPort.FLOW_CONTROL_XONXOFF_OUT_ENABLED;
-
-import static java.lang.Thread.sleep;
 
 public class Main {
 
-
-
     public static void main(String[] args) throws Exception {
-        OutputStream out;
-        InputStream in;
 
-        int i;
         SerialPort[] liste = SerialPort.getCommPorts();
-        for (SerialPort port : liste
-                ) {
+        for (SerialPort port : liste) {
             System.out.println(port.getDescriptivePortName());
         }
-        SerialPort obd = liste[1];
-        obd.closePort();
-        obd.setBaudRate(115200);
-        obd.setNumStopBits(1);
-        obd.setNumDataBits(8);
-        obd.setFlowControl(FLOW_CONTROL_XONXOFF_IN_ENABLED);
-        obd.setFlowControl(FLOW_CONTROL_XONXOFF_OUT_ENABLED);
-        obd.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
-        if (obd.openPort()) {
-            System.out.println("Verbindung Steht");
+        OutputStream out = OutputstreamGen.out();
+        InputStream in = InputstreamGen.in();
 
-        }
-        in = obd.getInputStream();
-        out = obd.getOutputStream();
+
+
+        /*
+
 
 
         OBDcollantTemperature collant = new OBDcollantTemperature();
@@ -80,7 +68,7 @@ public class Main {
 
         reset.run(in,out);
         System.out.println(reset.getResult());
-
+*/
 
         }
 

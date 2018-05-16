@@ -10,10 +10,17 @@ public class OBDkmh extends OBDcommand
 
     @Override
     protected void calculateResult() {
-        kmh = buffer.get(4);
+        if(available) {
+            kmh = buffer.get(4);
+        }
     }
     @Override
     public String getResult(){
-        return Integer.toString(kmh);
+        if(available) {
+            return Integer.toString(kmh);
+        }
+        else {
+            return "NODATA";
+        }
     }
 }

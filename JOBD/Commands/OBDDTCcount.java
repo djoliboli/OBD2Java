@@ -9,15 +9,23 @@ public class OBDDTCcount extends OBDcommand {
 
     @Override
     protected void calculateResult() {
-    count = buffer.get(4);
-    if(count <= 128){
-        engineLampOn = true;
-        count = count -128;
-    }
+        if (available) {
+            count = buffer.get(4);
+            if (count > 128) {
+                engineLampOn = true;
+                count = count - 128;
+            }
+        }
     }
 
     @Override
     public String getResult(){
-        return Integer.toString(count);
+        if(available) {
+            return Integer.toString(count);
+        }
+        else{
+            return "NODATA";
+        }
     }
+
 }

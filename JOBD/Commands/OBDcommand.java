@@ -1,6 +1,7 @@
 package Commands;
 
 import Exeption.CarUnableToConnectExeption;
+import Exeption.Checker;
 import Exeption.DataInvalidExeption;
 import Exeption.UnableToConnectExeption;
 
@@ -87,7 +88,7 @@ public abstract class OBDcommand {
     private static Pattern BUSINIT_PATTERN = Pattern.compile("(BUS INIT)|(BUSINIT)|(\\.)"); // BUS INIT Nachrichten
     private static Pattern SEARCHING_PATTERN = Pattern.compile("SEARCHING"); // Searching
     private static Pattern DIGITS_LETTERS_PATTERN = Pattern.compile("([0-9A-F])+"); // alle zugelassenen Zeichen
-    private static Pattern UNABLE_TO_CONNECT = Pattern.compile(".*UNABLETOCONNECT"); //falls nicht verbunden
+    protected static Pattern UNABLE_TO_CONNECT = Pattern.compile(".*UNABLETOCONNECT"); //falls nicht verbunden
     private static Pattern NODATA = Pattern.compile(".*NODATA"); //falls nicht verbunden
 
 
@@ -101,7 +102,7 @@ public abstract class OBDcommand {
         rawData = removeAll(BUSINIT_PATTERN, rawData);
 
         if(UNABLE_TO_CONNECT.matcher(rawData).matches()){
-            throw new CarUnableToConnectExeption();
+            Checker.CarConnected=false;
         }
         else if(NODATA.matcher(rawData).matches()){
             available = false;

@@ -8,11 +8,18 @@ public class OBDfuelLevel extends OBDcommand {
 
     @Override
     protected void calculateResult() {
-        percentage = buffer.get(4)*100/255;
+        if(available) {
+            percentage = buffer.get(4) * 100 / 255;
+        }
     }
 
     @Override
     public String getResult(){
-        return Float.toString(percentage);
+        if (available) {
+            return Float.toString(percentage);
+        }
+        else{
+            return "NODATA";
+        }
     }
 }
