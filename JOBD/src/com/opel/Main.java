@@ -1,23 +1,17 @@
 package com.opel;
-import Commands.*;
-import Config.config;
-import SerialCommunication.InputstreamGen;
-import SerialCommunication.OutputstreamGen;
-import SerialCommunication.SerialPortSelector;
-import com.fazecast.jSerialComm.*;
-import org.eclipse.paho.client.mqttv3.*;
-
-
-import java.io.InputStream;
-import java.io.OutputStream;
 
 
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+//test
 
-        SerialPort[] liste = SerialPort.getCommPorts();
+        // MQTThandler test = new MQTThandler();
+        //System.out.println("mqtt done");
+
+      /*
+  SerialPort[] liste = SerialPort.getCommPorts();
         for (SerialPort port : liste) {
             System.out.println(port.getDescriptivePortName());
         }
@@ -26,7 +20,6 @@ public class Main {
 
 
 
-        /*
 
 
 
@@ -70,7 +63,7 @@ public class Main {
         System.out.println(reset.getResult());
 */
 
-        }
-
     }
+
+}
 

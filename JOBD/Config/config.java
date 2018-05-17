@@ -8,7 +8,8 @@ import java.util.Properties;
 
 public class config {
     static Properties props = new Properties();
-
+    File configFile = new File(System.getProperty("user.dir") + "//Config//config.cfg");
+    static config conf = new config();
     // Serial Settings
     public static String SerialPort = props.getProperty("SerialPortName");
     public static Integer Baudrate = Integer.parseInt(props.getProperty("baudrate"));
@@ -16,15 +17,13 @@ public class config {
     public static Integer Stopbit = Integer.parseInt(props.getProperty("stopbit"));
 
     //MQTT Settings
+    public static String MQTTIP = props.getProperty("MQTTIP");
+    public static String MQTTport = props.getProperty("MQTTport");
 
-
-    File configFile = new File(System.getProperty("user.dir") + "//Config//config.cfg");
-    static config conf = new config();
-    public config(){
+    public config() {
         try {
             readConfig();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
@@ -36,35 +35,34 @@ public class config {
             FileReader reader = new FileReader(configFile);
             props.load(reader);
             reader.close();
-            if(props.isEmpty()){
+            if (props.isEmpty()) {
                 createDefaultConfig();
             }
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             try {
                 configFile.createNewFile();
                 createDefaultConfig();
-            }
-            catch (Exception e1){
+            } catch (Exception e1) {
                 File folder = new File(System.getProperty("user.dir") + "//Config");
                 folder.mkdir();
                 createDefaultConfig();
             }
         }
     }
-        protected void createDefaultConfig() throws IOException {
-        props.setProperty("baudrate","115200");
-        props.setProperty("COMport","1");
-        props.setProperty("IP","10.10.10.10");
-        props.setProperty("MQTTport","1234");
-        props.setProperty("SerialPortName","USB-to-Serial Port");
-        props.setProperty("databits","8");
-        props.setProperty("stopbit","1");
+
+    protected void createDefaultConfig() throws IOException {
+        props.setProperty("baudrate", "115200");
+        props.setProperty("COMport", "1");
+        props.setProperty("MQTTIP", "10.3.141.1");
+        props.setProperty("MQTTport", "1883");
+        props.setProperty("SerialPortName", "USB-to-Serial Port");
+        props.setProperty("databits", "8");
+        props.setProperty("stopbit", "1");
         FileWriter writer = new FileWriter(configFile);
-        props.store(writer,null);
+        props.store(writer, null);
         writer.flush();
         writer.close();
-        }
+    }
 
 
 }
