@@ -5,6 +5,8 @@ package com.opel;
 public class Main {
 
     public static void main(String[] args) {
+
+        GUI test = new GUI();
 //test
 
         // MQTThandler test = new MQTThandler();
