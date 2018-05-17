@@ -103,6 +103,7 @@ public class GUI  {
         contentTable.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         contentTable.setTableHeader(null);
         contentTable.setRowSelectionAllowed(false);
+        contentTable.setDefaultEditor(Object.class, null);
 
 
         contentTable.addMouseListener(new java.awt.event.MouseAdapter(){
