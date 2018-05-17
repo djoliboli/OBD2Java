@@ -8,7 +8,7 @@ public class GUI {
 
 
     public GUI() {
-       
+
         //Window
     }
 
