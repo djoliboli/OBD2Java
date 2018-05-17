@@ -96,9 +96,12 @@ public abstract class OBDcommand {
     protected void fillBuffer() throws DataInvalidExeption {
         rawData = removeAll(WHITESPACE_PATTERN, rawData); //removes all [ \t\n\x0B\f\r]
         rawData = removeAll(BUSINIT_PATTERN, rawData);
-
+        Checker.setCarConnected(true);
         if (UNABLE_TO_CONNECT.matcher(rawData).matches()) {
             Checker.setCarConnected(false);
+
+
+            return;
         } else if (NODATA.matcher(rawData).matches()) {
             available = false;
             return;
@@ -120,9 +123,12 @@ public abstract class OBDcommand {
     }
 
     public String getResult() {
-        if (available) {
+        if (available&&rawData!=null) {
             return rawData;
-        } else {
+        } else if (!Checker.isCarConnected()) {
+            return "Car not Connected";
+        }
+        else{
             return "NODATA";
         }
     }

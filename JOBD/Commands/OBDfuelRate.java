@@ -1,5 +1,7 @@
 package Commands;
 
+import Exeption.Checker;
+
 public class OBDfuelRate extends OBDcommand {
     float fuelRate=0;
     public OBDfuelRate() {
@@ -8,14 +10,17 @@ public class OBDfuelRate extends OBDcommand {
 
     @Override
     protected void calculateResult() {
-        if (available) {
+        if (available&& Checker.isCarConnected()) {
             fuelRate = (256 * buffer.get(4) + buffer.get(5)) / 20;
         }
     }
     @Override
     public String getResult(){
-        if(available){
+        if(available&&Checker.isCarConnected()){
             return Float.toString(fuelRate);
+        }
+        else if(!Checker.isCarConnected()) {
+            return "Car not connected";
         }
         else {
             return "NODATA";

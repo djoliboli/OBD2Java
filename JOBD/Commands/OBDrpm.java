@@ -1,5 +1,7 @@
 package Commands;
 
+import Exeption.Checker;
+
 public class OBDrpm extends OBDcommand {
     int rpm = 0;
     public OBDrpm() {
@@ -8,7 +10,7 @@ public class OBDrpm extends OBDcommand {
 
     @Override
     protected void calculateResult() {
-        if(available) {
+        if(available&& Checker.isCarConnected()) {
             rpm = (buffer.get(4) * 256 + buffer.get(5)) / 4;
         }
 
@@ -20,8 +22,11 @@ public class OBDrpm extends OBDcommand {
 
     @Override
     public String getResult(){
-        if(available) {
+        if(available&&Checker.isCarConnected()) {
             return String.valueOf(rpm);
+        }
+        else if(!Checker.isCarConnected()) {
+            return "Car not connected";
         }
         else {
             return "NODATA";

@@ -1,5 +1,7 @@
 package Commands;
 
+import Exeption.Checker;
+
 public class OBDDTCcount extends OBDcommand {
     protected int count = 0;
     boolean engineLampOn = false;
@@ -9,7 +11,7 @@ public class OBDDTCcount extends OBDcommand {
 
     @Override
     protected void calculateResult() {
-        if (available) {
+        if (available&& Checker.isCarConnected()) {
             count = buffer.get(4);
             if (count > 128) {
                 engineLampOn = true;
@@ -20,8 +22,11 @@ public class OBDDTCcount extends OBDcommand {
 
     @Override
     public String getResult(){
-        if(available) {
+        if(available&&Checker.isCarConnected()) {
             return Integer.toString(count);
+        }
+        else if(!Checker.isCarConnected()) {
+            return "Car not Connected";
         }
         else{
             return "NODATA";
