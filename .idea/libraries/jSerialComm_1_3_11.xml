@@ -2,6 +2,8 @@
   <library name="jSerialComm-1.3.11">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/JOBD/jar/jSerialComm-1.3.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/JOBD/jar/org.eclipse.paho.client.mqttv3-1.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/JOBD/jar/gson-2.8.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

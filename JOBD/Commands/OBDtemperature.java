@@ -8,11 +8,19 @@ public class OBDtemperature extends OBDcommand {
 
     @Override
     protected void calculateResult() {
-      temperature = buffer.get(4)-40;
+        if (available) {
+            temperature = buffer.get(4) - 40;
+        }
     }
 
     @Override
     public String getResult(){
-        return Integer.toString(temperature);
+        if(available) {
+            return Integer.toString(temperature);
+        }
+        else {
+         return "NODATA";
+        }
     }
+
 }

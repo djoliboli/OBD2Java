@@ -1,6 +1,7 @@
 package Commands;
 
 import Exeption.CarUnableToConnectExeption;
+import Exeption.Checker;
 import Exeption.DataInvalidExeption;
 import Exeption.UnableToConnectExeption;
 
@@ -20,8 +21,6 @@ public abstract class OBDcommand {
     boolean available = true;
 
 
-
-
     public OBDcommand(String command) {
         this.cmd = command;
         this.buffer = new ArrayList<>();
@@ -34,8 +33,7 @@ public abstract class OBDcommand {
                 sendCommand(out);
                 readResult(in);
                 end = System.currentTimeMillis();
-            }
-            else return;
+            } else return;
         }
     }
 
@@ -47,7 +45,7 @@ public abstract class OBDcommand {
         }
     }
 
-    protected void readResult(InputStream in) throws DataInvalidExeption, IOException, CarUnableToConnectExeption{
+    protected void readResult(InputStream in) throws DataInvalidExeption, IOException, CarUnableToConnectExeption {
         readRawData(in);
         checkData();
         fillBuffer();
@@ -57,12 +55,12 @@ public abstract class OBDcommand {
     protected abstract void calculateResult(); // Was muss mit den Daten noch passieren bevor diese zurück gegeben werden
 
     private void checkData() throws DataInvalidExeption {
-        if(rawData.isEmpty()){
+        if (rawData.isEmpty()) {
             throw new DataInvalidExeption();
         }
     }
 
-    protected void readRawData(InputStream in) throws IOException{
+    protected void readRawData(InputStream in) throws IOException {
         byte b = 0;
         StringBuilder res = new StringBuilder();
 
@@ -87,30 +85,26 @@ public abstract class OBDcommand {
     private static Pattern BUSINIT_PATTERN = Pattern.compile("(BUS INIT)|(BUSINIT)|(\\.)"); // BUS INIT Nachrichten
     private static Pattern SEARCHING_PATTERN = Pattern.compile("SEARCHING"); // Searching
     private static Pattern DIGITS_LETTERS_PATTERN = Pattern.compile("([0-9A-F])+"); // alle zugelassenen Zeichen
-    private static Pattern UNABLE_TO_CONNECT = Pattern.compile(".*UNABLETOCONNECT"); //falls nicht verbunden
+    protected static Pattern UNABLE_TO_CONNECT = Pattern.compile(".*UNABLETOCONNECT"); //falls nicht verbunden
     private static Pattern NODATA = Pattern.compile(".*NODATA"); //falls nicht verbunden
-
 
 
     protected String removeAll(Pattern pattern, String input) {
         return pattern.matcher(input).replaceAll("");
     }
 
-    protected void fillBuffer() throws CarUnableToConnectExeption, DataInvalidExeption {
+    protected void fillBuffer() throws DataInvalidExeption {
         rawData = removeAll(WHITESPACE_PATTERN, rawData); //removes all [ \t\n\x0B\f\r]
         rawData = removeAll(BUSINIT_PATTERN, rawData);
 
-        if(UNABLE_TO_CONNECT.matcher(rawData).matches()){
-            throw new CarUnableToConnectExeption();
-        }
-        else if(NODATA.matcher(rawData).matches()){
+        if (UNABLE_TO_CONNECT.matcher(rawData).matches()) {
+            Checker.setCarConnected(false);
+        } else if (NODATA.matcher(rawData).matches()) {
             available = false;
             return;
 
-        }
-
-        else if (!DIGITS_LETTERS_PATTERN.matcher(rawData).matches()) {
-            System.out.println("ERROR !!!: "+rawData);
+        } else if (!DIGITS_LETTERS_PATTERN.matcher(rawData).matches()) {
+            System.out.println("ERROR !!!: " + rawData);
             throw new DataInvalidExeption();
         }
 
@@ -126,15 +120,12 @@ public abstract class OBDcommand {
     }
 
     public String getResult() {
-        if (available){
+        if (available) {
             return rawData;
-        }
-        else{
+        } else {
             return "NODATA";
         }
     }
-
-
 
 
 }
