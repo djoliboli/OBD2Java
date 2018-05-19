@@ -18,6 +18,7 @@ public class SerialPortSelector {
 
         SerialPort[] liste = SerialPort.getCommPorts();
         for (SerialPort port : liste) {
+
             if (portname.matcher(port.getDescriptivePortName()).matches()) {
                 rightPort = port;
                 System.out.println("gefunden");
@@ -30,6 +31,7 @@ public class SerialPortSelector {
         }
 
         if (rightPort != null) {
+            rightPort.closePort();
             rightPort.setBaudRate(config.Baudrate);
             rightPort.setNumStopBits(config.Stopbit);
             rightPort.setNumDataBits(config.Databits);
@@ -42,11 +44,12 @@ public class SerialPortSelector {
             throw new OBDUnableToConnectExeption();        }
     }
 
-    public void close() {
+    public static void close() {
         rightPort.closePort();
 
 
     }
+
 
     public static boolean AdapterConnected() {
         if(rightPort!=null){

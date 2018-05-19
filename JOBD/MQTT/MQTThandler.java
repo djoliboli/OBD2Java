@@ -2,6 +2,7 @@ package MQTT;
 
 import Config.config;
 import Exeption.Checker;
+import com.opel.Main;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
@@ -11,18 +12,21 @@ public class MQTThandler {
   public MQTThandler() {
 
 
+
         try {
-            client = new MqttClient("tcp://" + config.MQTTIP + ":" + config.MQTTport, "OBDSERVER", persistence);
+            client = new MqttClient("tcp://" + config.MQTTIP + ":" + config.MQTTport, Double.toString(Math.random()), persistence);
             client.setCallback(new MqttCallback() {
                 @Override
                 public void connectionLost(Throwable throwable) {
                     Checker.setMQTTConnected(false);
                     System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
+
                 }
 
                 @Override
                 public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+                    Main.newMessage(mqttMessage.toString());
 
                 }
 
@@ -77,6 +81,16 @@ public class MQTThandler {
                 e1.printStackTrace();
                 System.exit(1);
             }
+            return false;
+        }
+
+    }
+    public boolean subscribe(String topic){
+        try {
+            client.subscribe(topic);
+            return true;
+        } catch (MqttException e) {
+            e.printStackTrace();
             return false;
         }
 

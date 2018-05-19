@@ -2,52 +2,41 @@ package com.opel;
 
 
 import Exeption.Checker;
+import MQTT.MQTThandler;
+
 import SerialCommunication.SerialPortSelector;
 import Threads.OBDreader;
+import Threads.Reader;
+import org.eclipse.paho.client.mqttv3.MqttClient;
 
 public class Main {
-    static Thread t1;
-    static int  x =0;
-
+    static Thread t2;
+    static String[] test;
     public static void main(String[] args) throws InterruptedException {
+        t2= new Thread(new Reader());
+        int n =1;
+        MQTThandler mainmenu = new MQTThandler();
+        mainmenu.subscribe("obd2controller");
 
-        runReader();
+
 
 
     }
 
-    public static void runReader() throws InterruptedException {
 
-        t1 = new Thread(new OBDreader());
-        t1.start();
-        while ((!Checker.isAdapterConnected())||(!Checker.isMQTTConnected())) {
-            System.out.println("nicht verbunden main");
-            Thread.sleep(2000);
-            if(x>10){
-                x=0;
-                t1.stop();
-                Checker.setMQTTConnected(false);
-                Checker.setAdapterConnected(false);
-                System.out.println("10 Erfolglose Versuche :(");
-                runReader();
-            }
-            x++;
-        }
-        while (SerialPortSelector.AdapterConnected()&&Checker.isMQTTConnected()) {
-            System.out.println("verbunden2 "+ Checker.isMQTTConnected());
+    public static void newMessage(String Message) {
 
-            Thread.sleep(1000);
+        System.out.println("new Message");
 
-
-        }
-        t1.stop();
-
-        Checker.setAdapterConnected(false);
+        t2.stop();
         Checker.setMQTTConnected(false);
+        t2 = new Thread(new Reader());
+        System.out.println(Message);
 
-        runReader();
+        t2.start();
 
     }
+
 
 }
 
