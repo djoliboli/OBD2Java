@@ -1,5 +1,7 @@
 package Commands;
 
+import Exeption.Checker;
+
 public class OBDtemperature extends OBDcommand {
     int temperature=0;
     public OBDtemperature(String command) {
@@ -8,18 +10,21 @@ public class OBDtemperature extends OBDcommand {
 
     @Override
     protected void calculateResult() {
-        if (available) {
+        if (available&& Checker.isCarConnected()) {
             temperature = buffer.get(4) - 40;
         }
     }
 
     @Override
     public String getResult(){
-        if(available) {
+        if(available&&Checker.isCarConnected()) {
             return Integer.toString(temperature);
         }
-        else {
-         return "NODATA";
+        else if(!Checker.isCarConnected()) {
+            return "Car not connected";
+        }
+         else {
+            return "NODATA";
         }
     }
 

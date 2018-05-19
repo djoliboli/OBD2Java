@@ -1,5 +1,7 @@
 package Commands;
 
+import Exeption.Checker;
+
 public class OBDkmh extends OBDcommand
 {
     int kmh = -1;
@@ -10,14 +12,17 @@ public class OBDkmh extends OBDcommand
 
     @Override
     protected void calculateResult() {
-        if(available) {
+        if(available&&Checker.isCarConnected()) {
             kmh = buffer.get(4);
         }
     }
     @Override
     public String getResult(){
-        if(available) {
+        if(available&&Checker.isCarConnected()) {
             return Integer.toString(kmh);
+        }
+        else if(!Checker.isCarConnected()) {
+            return "Car not connected";
         }
         else {
             return "NODATA";

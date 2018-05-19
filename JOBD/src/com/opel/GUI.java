@@ -3,12 +3,15 @@ package com.opel;
 import javax.swing.* ;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.*;
+import java.awt.event.MouseEvent;
 
-public class GUI {
+public class GUI  {
 
 
     public GUI() {
 
+        createGui();
         //Window
     }
 
@@ -24,13 +27,16 @@ public class GUI {
         // TODO Auto-generated constructor stub
         //Window
         MainWindow = new JFrame("OBD2 Scanner");
-        MainWindow.setSize(816, 518);
+        //MainWindow.setSize(816, 518);
+        //MainWindow.setVisible(true);
+        MainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        MainWindow.setUndecorated(true);
         MainWindow.setVisible(true);
 
         //WindowManager
         contentPanel = new JPanel();
         contentPanel.setOpaque(true);
-        contentPanel.setBackground(Color.lightGray);
+        contentPanel.setBackground(Color.LIGHT_GRAY);
         contentPanel.setLayout(null);
 
         //Title
@@ -41,17 +47,8 @@ public class GUI {
         Title.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 
-        //MainShit noch nicht implementiert
-        //dummy Data
-        Object[][] data = new Object[][]{ {"John", "Blue", "1"}, {"Oliver", "Green", "4"}, {"Hans", "Yellow", "7"}};
-        String[] header = new String [] {"1","2","3"};
-        contentTable = new JTable(new DefaultTableModel(data, header));
-        contentTable.setBackground(Color.WHITE);
-        contentTable.setSize(800, 390);
-        contentTable.setLocation(0, 80);
-        contentTable.setRowHeight(130);
-        contentTable.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        contentTable.setTableHeader(null);
+        //Tabelle initiieren
+        initializeTable();
 
 
 
@@ -87,19 +84,92 @@ public class GUI {
         contentPanel.setLayout(null);
         //MainWindow.setContentPane(contentPanel);
         MainWindow.getContentPane().add(contentPanel);
+        MainWindow.revalidate();
+        MainWindow.repaint();
 
         MainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    /* public static void updateMQTTChecker(){
-         boolean newState = false;
+    public static void initializeTable(){
 
-         if (newState==true(){
-             contentTable.setValueAt("neuer wert in der Zelle",0,2);
-         }
+        Object[][] data = new Object[][]{ {"Serieller Adapter verbunden", "Auto Verbunden"}, {"Datenbank aktiv", "MQTT Server verbunden"}, {"Diagnostic Trouble Code found", "Ausschalten"}};
+        String[] header = new String [] {"1","2"};
+        contentTable = new JTable(new DefaultTableModel(data, header));
 
+        contentTable.setBackground(Color.WHITE);
+        contentTable.setSize(800, 390);
+        contentTable.setLocation(0, 80);
+        contentTable.setRowHeight(130);
+        contentTable.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        contentTable.setTableHeader(null);
+        contentTable.setRowSelectionAllowed(false);
+        contentTable.setDefaultEditor(Object.class, null);
+
+
+        contentTable.addMouseListener(new java.awt.event.MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                int row = contentTable.rowAtPoint(e.getPoint());
+                int col = contentTable.columnAtPoint(e.getPoint());
+                //Debug only:
+                //System.out.println("Zeile: " + row + " Spalte :" + col);
+                if (row == 2 && col == 1){
+                    System.exit(0);
+                }
+            }
+        });
+
+    }
+
+    public static void updateMQTTChecker(boolean state) {
+
+        if (state == true) {
+            contentTable.setValueAt("MQTT Server ist verbunden!", 1, 1);
+        } else {
+            contentTable.setValueAt("MQTT Server ist nicht erreichbar!", 1, 1);
+        }
+    }
+
+    public static void updateDBChecker (boolean state) {
+
+        if (state == true) {
+            contentTable.setValueAt("Datenbank ist verbunden!", 0, 1);
+        } else {
+            contentTable.setValueAt("Datenbank ist  nicht erreichbar!", 0, 1);
+        }
+    }
+
+    public static void updateCarChecker (boolean state) {
+
+        if (state == true) {
+            contentTable.setValueAt("Auto ist verbunden!", 1, 0);
+        } else {
+            contentTable.setValueAt("Auto ist  nicht erreichbar!", 1, 0);
+        }
+    }
+
+    public static void updateAdapterChecker (boolean state) {
+
+        if (state == true) {
+            contentTable.setValueAt("Adapter ist verbunden!", 0, 0);
+        } else {
+            contentTable.setValueAt("Adapter ist  nicht erreichbar!", 0, 0);
+        }
+    }
+
+    public static void updateDTCChecker (int count) {
+
+        if (count == 0) {
+            contentTable.setValueAt("Kein DTC gefunden", 2, 0);
+        }
+        if(count > 0) {
+            contentTable.setValueAt(count + " Fehlercodes ausgelesen", 2, 0);
+        }
+        if(count < 0) {
+            contentTable.setValueAt("Fehler", 2, 0);
+        }
+    }
      }
 
- */
 
-}
+

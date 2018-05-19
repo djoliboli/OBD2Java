@@ -7,6 +7,11 @@ public class Main {
     public static void main(String[] args) {
 
         GUI test = new GUI();
+        GUI.updateMQTTChecker(false);
+        GUI.updateAdapterChecker(false);
+        GUI.updateCarChecker(false);
+        GUI.updateDBChecker(false);
+        GUI.updateDTCChecker(0);
 //test
 
         // MQTThandler test = new MQTThandler();
