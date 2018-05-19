@@ -2,7 +2,7 @@ package GSON;
 
 public class LiveData {
 
-    public String Datavalue = "";
-    public String type = "";
+    public String datavalue;
+    public String type;
 
 }

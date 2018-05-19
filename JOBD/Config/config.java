@@ -19,6 +19,7 @@ public class config {
     //MQTT Settings
     public static String MQTTIP = props.getProperty("MQTTIP");
     public static String MQTTport = props.getProperty("MQTTport");
+    public static Integer MQTTTimeout = Integer.parseInt(props.getProperty("MQTTTimeout"));
 
     public config() {
         try {
@@ -51,13 +52,16 @@ public class config {
     }
 
     protected void createDefaultConfig() throws IOException {
+        //Serial
         props.setProperty("baudrate", "115200");
         props.setProperty("COMport", "1");
-        props.setProperty("MQTTIP", "10.3.141.1");
-        props.setProperty("MQTTport", "1883");
         props.setProperty("SerialPortName", "USB-to-Serial Port");
         props.setProperty("databits", "8");
         props.setProperty("stopbit", "1");
+        //MQTT
+        props.setProperty("MQTTIP", "10.3.141.1");
+        props.setProperty("MQTTport", "1883");
+        props.setProperty("MQTTTimeout","1000");
         FileWriter writer = new FileWriter(configFile);
         props.store(writer, null);
         writer.flush();

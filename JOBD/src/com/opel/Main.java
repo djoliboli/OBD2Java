@@ -1,74 +1,51 @@
 package com.opel;
 
 
+import Exeption.Checker;
+import SerialCommunication.SerialPortSelector;
+import Threads.OBDreader;
 
 public class Main {
+    static Thread t1;
+    static int  x =0;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        GUI test = new GUI();
-        GUI.updateMQTTChecker(false);
-        GUI.updateAdapterChecker(false);
-        GUI.updateCarChecker(false);
-        GUI.updateDBChecker(false);
-        GUI.updateDTCChecker(0);
-//test
+        runReader();
 
-        // MQTThandler test = new MQTThandler();
-        //System.out.println("mqtt done");
 
-      /*
-  SerialPort[] liste = SerialPort.getCommPorts();
-        for (SerialPort port : liste) {
-            System.out.println(port.getDescriptivePortName());
+    }
+
+    public static void runReader() throws InterruptedException {
+
+        t1 = new Thread(new OBDreader());
+        t1.start();
+        while ((!Checker.isAdapterConnected())||(!Checker.isMQTTConnected())) {
+            System.out.println("nicht verbunden main");
+            Thread.sleep(2000);
+            if(x>10){
+                x=0;
+                t1.stop();
+                Checker.setMQTTConnected(false);
+                Checker.setAdapterConnected(false);
+                System.out.println("10 Erfolglose Versuche :(");
+                runReader();
+            }
+            x++;
         }
-        OutputStream out = OutputstreamGen.out();
-        InputStream in = InputstreamGen.in();
+        while (SerialPortSelector.AdapterConnected()&&Checker.isMQTTConnected()) {
+            System.out.println("verbunden2 "+ Checker.isMQTTConnected());
+
+            Thread.sleep(1000);
 
 
+        }
+        t1.stop();
 
+        Checker.setAdapterConnected(false);
+        Checker.setMQTTConnected(false);
 
-
-
-        OBDcollantTemperature collant = new OBDcollantTemperature();
-
-        OBDDTCcount count = new OBDDTCcount();
-
-        OBDfuelLevel fuel = new OBDfuelLevel();
-
-        OBDfuelRate fuel2 = new OBDfuelRate();
-
-        OBDkmh kmh = new OBDkmh();
-
-        OBDoilTemperature oil = new OBDoilTemperature();
-
-        OBDrpm rpm = new OBDrpm();
-
-        OBDthrottlePosition trottle = new OBDthrottlePosition();
-
-        OBDreset reset = new OBDreset();
-
-        collant.run(in,out);
-        count.run(in,out);
-        fuel.run(in,out);
-        fuel2.run(in,out);
-        kmh.run(in,out);
-        oil.run(in,out);
-        rpm.run(in,out);
-        trottle.run(in,out);
-        System.out.println("Coollanttemp: " + collant.getResult());
-        System.out.println("DTC Count: " + count.getResult());
-        System.out.println("FuelLevel: " + fuel.getResult());
-        System.out.println("FuelRate: " + fuel2.getResult());
-        System.out.println("KMH: " + kmh.getResult());
-        System.out.println("OIL: " + oil.getResult());
-        System.out.println("RPM: " + rpm.getResult());
-        System.out.println("Trootle: " + trottle.getResult());
-        System.out.println("All Done");
-
-        reset.run(in,out);
-        System.out.println(reset.getResult());
-*/
+        runReader();
 
     }
 

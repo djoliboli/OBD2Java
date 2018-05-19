@@ -7,36 +7,58 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class MQTThandler {
     MemoryPersistence persistence = new MemoryPersistence();
-
     MqttClient client;
+  public MQTThandler() {
 
-    {
+
         try {
             client = new MqttClient("tcp://" + config.MQTTIP + ":" + config.MQTTport, "OBDSERVER", persistence);
-            Checker.setMQTTConnected(true);
+            client.setCallback(new MqttCallback() {
+                @Override
+                public void connectionLost(Throwable throwable) {
+                    Checker.setMQTTConnected(false);
+                    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+                }
+
+                @Override
+                public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+
+                }
+
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+                }
+            });
+
         } catch (MqttException e) {
             e.printStackTrace();
             Checker.setMQTTConnected(false);
         }
-    }
+                    while (!Checker.isMQTTConnected()) {
+                        try {
 
-    public MQTThandler() {
-        try {
+                            MqttConnectOptions connOpts = new MqttConnectOptions();
+                            connOpts.setCleanSession(true);
+                            connOpts.setConnectionTimeout(3);
 
-            MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setCleanSession(true);
-            System.out.println("Connecting to broker: " + config.MQTTIP);
-            client.connect(connOpts);
-            System.out.println("Connected");
 
-            client.close();
-            System.exit(0);
-        } catch (Exception e) {
-            Checker.setMQTTConnected(false);
-            System.out.println(e.getMessage());
-        }
+                            System.out.println("Connecting to broker: " + config.MQTTIP);
+                            client.connect(connOpts);
+                            Checker.setMQTTConnected(true);
+                            System.out.println("hello");
 
-    }
+
+                        } catch (Exception e) {
+                            Checker.setMQTTConnected(false);
+                            System.out.println(e.getMessage());
+
+                        }
+
+                    }
+                }
+
 
     public boolean sendMessage(String topic, String messageString) {
         System.out.println("message: " + messageString);
@@ -44,12 +66,21 @@ public class MQTThandler {
         MqttMessage message = new MqttMessage(messageString.getBytes());
         message.setQos(0);
         try {
-            client.publish(topic, message);
+            this.client.publish(topic, message);
             System.out.println("Message published");
             return true;
         } catch (MqttException e) {
+            System.out.println(e.getMessage());
+            try {
+                client.reconnect();
+            } catch (MqttException e1) {
+                e1.printStackTrace();
+                System.exit(1);
+            }
             return false;
         }
 
     }
+
+
 }
