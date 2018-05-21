@@ -2,6 +2,7 @@ package Commands;
 
 import Exeption.CarUnableToConnectExeption;
 import Exeption.Checker;
+import SerialCommunication.StreamGen;
 
 
 import java.io.IOException;
@@ -111,6 +112,8 @@ public abstract class OBDcommand {
 
         } else if (!DIGITS_LETTERS_PATTERN.matcher(rawData).matches()) {
             System.out.println("ERROR !!!: " + rawData);
+            rawData = "Müll";
+            return;
 
         }
 
@@ -129,7 +132,7 @@ public abstract class OBDcommand {
         if (available&&rawData!=null) {
             return rawData;
         } else if (!Checker.isCarConnected()) {
-            return "Car not Connected";
+          return "Car not Connected";
         }
         else{
             return "NODATA";

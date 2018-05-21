@@ -66,6 +66,11 @@ public class OBDreader implements Runnable {
             System.out.println("adapter nicht verbunden");
             for (String a:types) {
                 sendMessage(a,"Adapter not connected");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
 
             }
             try {
@@ -80,7 +85,10 @@ public class OBDreader implements Runnable {
             while (true) {
                 System.out.println("run");
                 collant.run(in, out);
-                sendMessage("coolwatertemp",collant.getResult());
+                count.run(in, out);
+
+                sendMessage("dtccount",count.getResult());
+                /*sendMessage("coolwatertemp",collant.getResult());
 
 
                 count.run(in, out);
@@ -101,11 +109,12 @@ public class OBDreader implements Runnable {
                 //reset.run(in, out);
                 System.out.println("obd");
                 sendMessage("reset",reset.getResult());
-                System.out.println("send");
+                System.out.println("send");*/
                 //vin.run(in,out);
-                //dtc.run(in,out);
-                System.out.println("dtc "+dtc.getResult());
-                System.out.println("vin "+vin.getFormattedResult());
+                //System.out.println("vin "+vin.getFormattedResult());
+                dtc.run(in,out);
+                System.out.println("dtc "+dtc.getCalculatedResult());
+
 
 
             }

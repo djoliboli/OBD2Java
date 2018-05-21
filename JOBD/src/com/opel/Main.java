@@ -12,14 +12,14 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
 
-        MQTThandler mainmenu = new MQTThandler();
-        mainmenu.subscribe("Control");
-
+        //MQTThandler mainmenu = new MQTThandler();
+        //mainmenu.subscribe("Control");
+    newMessage("Live");
 
     }
 
 
-    public static void newMessage(String Message) {
+    public static void newMessage(String Message) throws InterruptedException {
 
         System.out.println("new Message");
         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -32,11 +32,13 @@ public class Main {
             Reader.t1.interrupt();
             Reader.t1.stop();
             activeThread.stop();
+            Thread.sleep(1000);
 
         }
         switch (Message) {
             case "Live":
                 System.out.println("LIVE");
+
                 activeThread = new Thread(new Reader());
                 activeThread.start();
                 System.out.println("Live started");

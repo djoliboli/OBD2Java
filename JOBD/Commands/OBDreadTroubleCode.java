@@ -5,7 +5,7 @@ import Exeption.Checker;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class OBDreadTroubleCode extends OBDcommand {
+public class OBDreadTroubleCode extends OBDcommand{
 
     protected final static char[] dtcLetters = {'P', 'C', 'B', 'U'};
     protected final static char[] hexArray = "0123456789ABCDEF".toCharArray();
@@ -28,10 +28,14 @@ public class OBDreadTroubleCode extends OBDcommand {
     @Override
     protected void calculateResult() {
         final String result = getResult();
-        String workingData;
-        int startIndex = 0;//Header size.
 
-        String canOneFrame = result.replaceAll("[\r\n]", "");
+
+        String workingData;
+
+        int startIndex = 0;//Header size.
+        String cof = result.substring(2);
+        String canOneFrame = cof.replaceAll("[\r\n]", "");
+        System.out.println("Can One Frame "+canOneFrame);
         int canOneFrameLength = canOneFrame.length();
         if (canOneFrameLength <= 16 && canOneFrameLength % 4 == 0) {//CAN(ISO-15765) protocol one frame.
             workingData = canOneFrame;//43yy{codes}
@@ -103,13 +107,7 @@ public class OBDreadTroubleCode extends OBDcommand {
     }
 
     /** {@inheritDoc} */
-    @Override
-    public String getResult() {
-        if(Checker.isCarConnected()){
-        return codes.toString();}
-        else
-            return " Car not Connected";
-    }
+
 
 
 
