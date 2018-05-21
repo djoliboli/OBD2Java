@@ -48,7 +48,7 @@ public abstract class OBDpersistentCommand extends OBDcommand {
 
     /** {@inheritDoc} */
     @Override
-    protected void readResult(InputStream in) throws IOException {
+    protected void readRawData(InputStream in) throws IOException {
         super.readRawData(in);
         String key = getClass().getSimpleName();
         knownValues.put(key, rawData);
@@ -57,7 +57,7 @@ public abstract class OBDpersistentCommand extends OBDcommand {
 
     /** {@inheritDoc} */
     @Override
-    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException, DataInvalidExeption, CarUnableToConnectExeption {
+    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException, CarUnableToConnectExeption {
         String key = getClass().getSimpleName();
         if (knownValues.containsKey(key)) {
             rawData = knownValues.get(key);

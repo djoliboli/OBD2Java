@@ -12,7 +12,7 @@ import static com.fazecast.jSerialComm.SerialPort.FLOW_CONTROL_XONXOFF_OUT_ENABL
 public class SerialPortSelector {
 
     private static Pattern portname = Pattern.compile(".*" + config.SerialPort + ".*"); //aus conf prop
-    private static SerialPort rightPort = null;
+    public static SerialPort rightPort = null;
 
     public  SerialPort findPort() throws OBDUnableToConnectExeption {
 

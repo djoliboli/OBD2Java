@@ -1,5 +1,7 @@
 package Commands;
 
+import Exeption.Checker;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -103,7 +105,10 @@ public class OBDreadTroubleCode extends OBDcommand {
     /** {@inheritDoc} */
     @Override
     public String getResult() {
-        return codes.toString();
+        if(Checker.isCarConnected()){
+        return codes.toString();}
+        else
+            return " Car not Connected";
     }
 
 

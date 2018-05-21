@@ -2,8 +2,7 @@ package Commands;
 
 import Exeption.CarUnableToConnectExeption;
 import Exeption.Checker;
-import Exeption.DataInvalidExeption;
-import Exeption.UnableToConnectExeption;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,8 +25,10 @@ public abstract class OBDcommand {
         this.buffer = new ArrayList<>();
     }
 
-    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException, DataInvalidExeption, CarUnableToConnectExeption {
+    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException, CarUnableToConnectExeption {
         synchronized (OBDcommand.class) {
+
+
             if (available) {
                 start = System.currentTimeMillis();
                 sendCommand(out);
@@ -45,7 +46,7 @@ public abstract class OBDcommand {
         }
     }
 
-    protected void readResult(InputStream in) throws DataInvalidExeption, IOException, CarUnableToConnectExeption {
+    protected void readResult(InputStream in) throws  IOException, CarUnableToConnectExeption {
         readRawData(in);
         checkData();
         fillBuffer();
@@ -54,9 +55,9 @@ public abstract class OBDcommand {
 
     protected abstract void calculateResult(); // Was muss mit den Daten noch passieren bevor diese zurück gegeben werden
 
-    private void checkData() throws DataInvalidExeption {
+    private void checkData()  {
         if (rawData.isEmpty()) {
-            throw new DataInvalidExeption();
+
         }
     }
 
@@ -86,18 +87,20 @@ public abstract class OBDcommand {
     private static Pattern SEARCHING_PATTERN = Pattern.compile("SEARCHING"); // Searching
     private static Pattern DIGITS_LETTERS_PATTERN = Pattern.compile("([0-9A-F])+"); // alle zugelassenen Zeichen
     protected static Pattern UNABLE_TO_CONNECT = Pattern.compile(".*UNABLETOCONNECT"); //falls nicht verbunden
-    private static Pattern NODATA = Pattern.compile(".*NODATA"); //falls nicht verbunden
+    protected static Pattern UNABLE_TO_CONNECT2 = Pattern.compile(".*For input string"); //falls nicht verbunden
+
+        private static Pattern NODATA = Pattern.compile(".*NODATA"); //falls nicht verbunden
 
 
     protected String removeAll(Pattern pattern, String input) {
         return pattern.matcher(input).replaceAll("");
     }
 
-    protected void fillBuffer() throws DataInvalidExeption {
+    protected void fillBuffer()  {
         rawData = removeAll(WHITESPACE_PATTERN, rawData); //removes all [ \t\n\x0B\f\r]
         rawData = removeAll(BUSINIT_PATTERN, rawData);
         Checker.setCarConnected(true);
-        if (UNABLE_TO_CONNECT.matcher(rawData).matches()) {
+        if (UNABLE_TO_CONNECT.matcher(rawData).matches()|UNABLE_TO_CONNECT2.matcher(rawData).matches()) {
             Checker.setCarConnected(false);
 
 
@@ -108,7 +111,7 @@ public abstract class OBDcommand {
 
         } else if (!DIGITS_LETTERS_PATTERN.matcher(rawData).matches()) {
             System.out.println("ERROR !!!: " + rawData);
-            throw new DataInvalidExeption();
+
         }
 
         // read string each two chars

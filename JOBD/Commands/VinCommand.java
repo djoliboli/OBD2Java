@@ -18,6 +18,9 @@ public class VinCommand extends OBDpersistentCommand {
     @Override
     protected void calculateResult() {
         final String result = getResult();
+        if(result.equals("Car not Connected")){
+            vin = "Car not Connected";
+            return;}
         String workingData;
         if (result.contains(":")) {//CAN(ISO-15765) protocol.
             workingData = result.replaceAll(".:", "").substring(9);//9 is xxx490201, xxx is bytes of information to follow.

@@ -3,22 +3,17 @@ package com.opel;
 
 import Exeption.Checker;
 import MQTT.MQTThandler;
-
 import SerialCommunication.SerialPortSelector;
-import Threads.OBDreader;
 import Threads.Reader;
-import org.eclipse.paho.client.mqttv3.MqttClient;
 
 public class Main {
-    static Thread t2;
-    static String[] test;
+    static Thread activeThread = null;
+
     public static void main(String[] args) throws InterruptedException {
-        t2= new Thread(new Reader());
-        int n =1;
+
+
         MQTThandler mainmenu = new MQTThandler();
-        mainmenu.subscribe("obd2controller");
-
-
+        mainmenu.subscribe("Control");
 
 
     }
@@ -27,13 +22,42 @@ public class Main {
     public static void newMessage(String Message) {
 
         System.out.println("new Message");
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println(activeThread == null);
+        if (SerialPortSelector.AdapterConnected()) {
+            SerialPortSelector.rightPort.closePort();
+        }
+        Checker.setAdapterConnected(false);
+        if (activeThread != null) {
+            Reader.t1.interrupt();
+            Reader.t1.stop();
+            activeThread.stop();
 
-        t2.stop();
+        }
+        switch (Message) {
+            case "Live":
+                System.out.println("LIVE");
+                activeThread = new Thread(new Reader());
+                activeThread.start();
+                System.out.println("Live started");
+                break;
+            case "Error":
+                System.out.println("ERROR");
+                activeThread = new Thread(new Reader());
+                activeThread.start();
+                System.out.println("Live started");
+                break;
+            case "Delete":
+                System.out.println("");
+                break;
+            default:
+                System.out.println("Keine Gueltige Anweisung");
+
+        }
         Checker.setMQTTConnected(false);
-        t2 = new Thread(new Reader());
         System.out.println(Message);
 
-        t2.start();
+        //activeThread.start();
 
     }
 

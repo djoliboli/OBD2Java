@@ -35,6 +35,10 @@ public class OBDreader implements Runnable {
     private static OBDthrottlePosition trottle = new OBDthrottlePosition();
     private OBDreset reset = new OBDreset();
     private static MQTThandler obdData;
+    private static OBDreadTroubleCode dtc = new OBDreadTroubleCode();
+    public static VinCommand vin = new VinCommand();
+    static String[] types = {"coolwatertemp","dtcount","fuellevel","fuelrate","kmh","oiltemp","rpm","throttlepos"};
+
 
 
 
@@ -60,8 +64,12 @@ public class OBDreader implements Runnable {
 
         }catch (OBDUnableToConnectExeption e){
             System.out.println("adapter nicht verbunden");
+            for (String a:types) {
+                sendMessage(a,"Adapter not connected");
+
+            }
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
@@ -72,9 +80,11 @@ public class OBDreader implements Runnable {
             while (true) {
                 System.out.println("run");
                 collant.run(in, out);
-                System.out.println(collant.getResult());
                 sendMessage("coolwatertemp",collant.getResult());
+
+
                 count.run(in, out);
+
                 sendMessage("dtccount",count.getResult());
                 fuel.run(in, out);
                 sendMessage("fuellevel",fuel.getResult());
@@ -88,10 +98,15 @@ public class OBDreader implements Runnable {
                 sendMessage("rpm",rpm.getResult());
                 trottle.run(in, out);
                 sendMessage("throttlepos",trottle.getResult());
-                reset.run(in, out);
+                //reset.run(in, out);
                 System.out.println("obd");
                 sendMessage("reset",reset.getResult());
                 System.out.println("send");
+                //vin.run(in,out);
+                //dtc.run(in,out);
+                System.out.println("dtc "+dtc.getResult());
+                System.out.println("vin "+vin.getFormattedResult());
+
 
             }
         }
