@@ -6,9 +6,9 @@ import java.sql.*;
 
 public class DatabaseHandler {
 
-    private final String url = "jdbc:postgresql://localhost/obd2_db";
-    private final String user = "postgres";
-    private final String password = "root";
+    private final String url = "jdbc:postgresql://localhost/obddb";
+    private final String user = "servclient";
+    private final String password = "servclient1";
     private Connection connection = null;
 
     public void connectToDBServer(){
