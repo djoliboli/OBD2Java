@@ -26,7 +26,7 @@ public class OBDDTCcount extends OBDcommand {
             return Integer.toString(count);
         }
         else if(!Checker.isCarConnected()) {
-            return "Car not Connected";
+            return "Car not connected";
         }
         else{
             return "NODATA";

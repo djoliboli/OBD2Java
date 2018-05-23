@@ -1,6 +1,8 @@
 package Exeption;
 
-import com.fazecast.jSerialComm.SerialPort;
+import SerialCommunication.SerialPortSelector;
+
+import com.opel.GUI;
 
 public class Checker {
 
@@ -10,6 +12,13 @@ public class Checker {
 
     public static void setAdapterConnected(boolean adapterConnected) {
         AdapterConnected = adapterConnected;
+        if(adapterConnected){
+            GUI.updateAdapterChecker(adapterConnected);
+        }
+        if(!SerialPortSelector.AdapterConnected()){
+            GUI.updateAdapterChecker(false);
+        }
+
     }
 
     public static boolean isCarConnected() {
@@ -18,6 +27,7 @@ public class Checker {
 
     public static void setCarConnected(boolean carConnected) {
         CarConnected = carConnected;
+        GUI.updateCarChecker(carConnected);
     }
 
     public static boolean isMQTTConnected() {
@@ -26,6 +36,9 @@ public class Checker {
 
     public static void setMQTTConnected(boolean MQTTConnected) {
         Checker.MQTTConnected = MQTTConnected;
+        if(MQTTConnected) {
+            GUI.updateMQTTChecker(MQTTConnected);
+        }
     }
 
     public static boolean isDBConnected() {

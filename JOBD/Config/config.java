@@ -21,6 +21,11 @@ public class config {
     public static String MQTTport = props.getProperty("MQTTport");
     public static Integer MQTTTimeout = Integer.parseInt(props.getProperty("MQTTTimeout"));
 
+    public static String DBIP = props.getProperty("DBIP");
+    public static String DBname = props.getProperty("DBname");
+    public static String DBuser = props.getProperty("DBuser");
+    public static String DBpw = props.getProperty("DBport");
+
     public config() {
         try {
             readConfig();
@@ -62,6 +67,11 @@ public class config {
         props.setProperty("MQTTIP", "10.3.141.1");
         props.setProperty("MQTTport", "1883");
         props.setProperty("MQTTTimeout","1000");
+        //DB
+        props.setProperty("DPIP","localhost");
+        props.setProperty("DBname","obddb");
+        props.setProperty("DBuser","serverclient");
+        props.setProperty("DBpw","serverlient1");
         FileWriter writer = new FileWriter(configFile);
         props.store(writer, null);
         writer.flush();
