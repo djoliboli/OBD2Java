@@ -1,14 +1,15 @@
 package DatabaseHandler;
 
+import Config.config;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 
 public class DatabaseHandler {
 
-    private final String url = "jdbc:postgresql://localhost/obddb";
-    private final String user = "servclient";
-    private final String password = "servclient1";
+    private final String url = "jdbc:postgresql://"+ config.DBIP+"/"+config.DBname;
+    private final String user = config.DBuser;
+    private final String password = config.DBpw;
     private Connection connection = null;
 
     public void connectToDBServer(){
