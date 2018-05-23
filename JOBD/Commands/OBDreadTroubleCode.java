@@ -36,6 +36,11 @@ public class OBDreadTroubleCode extends OBDcommand{
         String cof = result.substring(2);
         String canOneFrame = cof.replaceAll("[\r\n]", "");
         System.out.println("Can One Frame "+canOneFrame);
+        if (UNABLE_TO_CONNECT.matcher(canOneFrame).matches()|UNABLE_TO_CONNECT2.matcher(canOneFrame).matches()) {
+            Checker.setCarConnected(false);
+
+            return;
+        }
         int canOneFrameLength = canOneFrame.length();
         if (canOneFrameLength <= 16 && canOneFrameLength % 4 == 0) {//CAN(ISO-15765) protocol one frame.
             workingData = canOneFrame;//43yy{codes}

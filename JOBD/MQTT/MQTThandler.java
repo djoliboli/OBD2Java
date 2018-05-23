@@ -48,10 +48,11 @@ public class MQTThandler {
                             connOpts.setConnectionTimeout(3);
 
 
+
                             System.out.println("Connecting to broker: " + config.MQTTIP);
                             client.connect(connOpts);
                             Checker.setMQTTConnected(true);
-                            System.out.println("hello");
+                            System.out.println("hello i am connected");
 
 
                         } catch (Exception e) {

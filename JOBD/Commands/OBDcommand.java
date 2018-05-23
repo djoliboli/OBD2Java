@@ -26,7 +26,7 @@ public abstract class OBDcommand {
         this.buffer = new ArrayList<>();
     }
 
-    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException, CarUnableToConnectExeption {
+    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException {
         synchronized (OBDcommand.class) {
 
 
@@ -47,7 +47,7 @@ public abstract class OBDcommand {
         }
     }
 
-    protected void readResult(InputStream in) throws  IOException, CarUnableToConnectExeption {
+    protected void readResult(InputStream in) throws  IOException {
         readRawData(in);
         checkData();
         fillBuffer();

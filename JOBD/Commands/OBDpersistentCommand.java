@@ -57,7 +57,7 @@ public abstract class OBDpersistentCommand extends OBDcommand {
 
     /** {@inheritDoc} */
     @Override
-    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException, CarUnableToConnectExeption {
+    public void run(InputStream in, OutputStream out) throws IOException, InterruptedException {
         String key = getClass().getSimpleName();
         if (knownValues.containsKey(key)) {
             rawData = knownValues.get(key);

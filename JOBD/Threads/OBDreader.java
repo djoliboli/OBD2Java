@@ -33,9 +33,7 @@ public class OBDreader implements Runnable {
     private static OBDoilTemperature oil = new OBDoilTemperature();
     private static OBDrpm rpm = new OBDrpm();
     private static OBDthrottlePosition trottle = new OBDthrottlePosition();
-    private OBDreset reset = new OBDreset();
-    private static MQTThandler obdData;
-    private static OBDreadTroubleCode dtc = new OBDreadTroubleCode();
+    private MQTThandler obdData;
     public static VinCommand vin = new VinCommand();
     static String[] types = {"coolwatertemp","dtcount","fuellevel","fuelrate","kmh","oiltemp","rpm","throttlepos"};
 
@@ -67,7 +65,7 @@ public class OBDreader implements Runnable {
             for (String a:types) {
                 sendMessage(a,"Adapter not connected");
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
@@ -88,7 +86,7 @@ public class OBDreader implements Runnable {
                 count.run(in, out);
 
                 sendMessage("dtccount",count.getResult());
-                /*sendMessage("coolwatertemp",collant.getResult());
+                sendMessage("coolwatertemp",collant.getResult());
 
 
                 count.run(in, out);
@@ -106,14 +104,10 @@ public class OBDreader implements Runnable {
                 sendMessage("rpm",rpm.getResult());
                 trottle.run(in, out);
                 sendMessage("throttlepos",trottle.getResult());
-                //reset.run(in, out);
-                System.out.println("obd");
-                sendMessage("reset",reset.getResult());
-                System.out.println("send");*/
-                //vin.run(in,out);
-                //System.out.println("vin "+vin.getFormattedResult());
-                dtc.run(in,out);
-                System.out.println("dtc "+dtc.getCalculatedResult());
+
+                vin.run(in,out);
+                sendMessage("vin",vin.getFormattedResult());
+
 
 
 
