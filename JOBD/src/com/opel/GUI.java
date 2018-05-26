@@ -92,7 +92,7 @@ public class GUI  {
 
     public static void initializeTable(){
 
-        Object[][] data = new Object[][]{ {"Adapter ist nicht erreichbar!", "Auto ist  nicht erreichbar!"}, {"Datenbank ist  nicht erreichbar!", "MQTT Server ist nicht erreichbar!"}, {"Kein DTC gefunden", "Ausschalten"}};
+        Object[][] data = new Object[][]{ {"Adapter ist nicht erreichbar", "Auto ist nicht erreichbar"}, {"Datenbank ist nicht erreichbar", "MQTT Server ist nicht erreichbar"}, {"Kein DTC gefunden", "Ausschalten"}};
         String[] header = new String [] {"1","2"};
         contentTable = new JTable(new DefaultTableModel(data, header));
 
@@ -124,36 +124,36 @@ public class GUI  {
     public static void updateMQTTChecker(boolean state) {
 
         if (state == true) {
-            contentTable.setValueAt("MQTT Server ist verbunden!", 1, 1);
+            contentTable.setValueAt("MQTT Server ist verbunden", 1, 1);
         } else {
-            contentTable.setValueAt("MQTT Server ist nicht erreichbar!", 1, 1);
+            contentTable.setValueAt("MQTT Server ist nicht erreichbar", 1, 1);
         }
     }
 
     public static void updateDBChecker (boolean state) {
 
         if (state == true) {
-            contentTable.setValueAt("Datenbank ist verbunden!", 1, 0);
+            contentTable.setValueAt("Datenbank ist verbunden", 1, 0);
         } else {
-            contentTable.setValueAt("Datenbank ist  nicht erreichbar!", 1, 0);
+            contentTable.setValueAt("Datenbank ist  nicht erreichbar", 1, 0);
         }
     }
 
     public static void updateCarChecker (boolean state) {
 
         if (state == true) {
-            contentTable.setValueAt("Auto ist verbunden!", 0, 1);
+            contentTable.setValueAt("Auto ist verbunden", 0, 1);
         } else {
-            contentTable.setValueAt("Auto ist  nicht erreichbar!", 0, 1);
+            contentTable.setValueAt("Auto ist  nicht erreichbar", 0, 1);
         }
     }
 
     public static void updateAdapterChecker (boolean state) {
 
         if (state == true) {
-            contentTable.setValueAt("Adapter ist verbunden!", 0, 0);
+            contentTable.setValueAt("Adapter ist verbunden", 0, 0);
         } else {
-            contentTable.setValueAt("Adapter ist nicht erreichbar!", 0, 0);
+            contentTable.setValueAt("Adapter ist nicht erreichbar", 0, 0);
         }
     }
 
