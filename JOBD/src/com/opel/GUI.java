@@ -40,7 +40,7 @@ public class GUI  {
         contentPanel.setLayout(null);
 
         //Title
-        Title = new JLabel("OBD-2 Dashboard", JLabel.CENTER);
+        Title = new JLabel("OBDoc", JLabel.CENTER);
         Title.setSize(800, 70);
         Title.setLocation(0, 0);
         Title.setFont(new Font("Serif", Font.PLAIN, 28));
