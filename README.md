@@ -1,3 +1,3 @@
 # OBD2Java
 
-DHBW Studienarbeit
+DHBW Studienarbeit von Jonatahan Seibel, Maximilian Olbort und Marvin Meinhard
